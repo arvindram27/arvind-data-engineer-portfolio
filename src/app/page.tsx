@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database, BarChart, Cloud, Code, Globe, Cpu } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database, BarChart, Cloud, Code, Cpu } from "lucide-react";
 
 const projectsData = [
   {
@@ -74,7 +74,6 @@ const skillsData = {
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     setIsVisible(true);
@@ -181,7 +180,6 @@ export default function Home() {
                 deletingSpeed={50}
                 pauseDuration={2000}
                 className="text-type--subtitle"
-                textColors={["#ffffff", "#00d4ff", "#60a5fa", "#34d399", "#fbbf24"]}
                 cursorCharacter="_"
                 cursorBlinkDuration={0.8}
               />
@@ -247,7 +245,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">About Me</h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              As an entry-level data engineer, I'm passionate about building robust data solutions that drive business value.
+              As an entry-level data engineer, I&apos;m passionate about building robust data solutions that drive business value.
             </p>
           </div>
           
@@ -263,7 +261,7 @@ export default function Home() {
                 </GradientText>
               </h3>
               <p className="text-gray-400 mb-6">
-                I'm a dedicated data engineering professional with a strong foundation in programming, database management, 
+                I&apos;m a dedicated data engineering professional with a strong foundation in programming, database management,
                 and data pipeline development. My passion lies in transforming complex data challenges into streamlined, 
                 efficient solutions.
               </p>
@@ -475,7 +473,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">Get In Touch</h2>
-            <p className="text-xl text-gray-400">Let's connect and discuss data engineering opportunities</p>
+            <p className="text-xl text-gray-400">Let&apos;s connect and discuss data engineering opportunities</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-12">
@@ -517,7 +515,7 @@ export default function Home() {
                 <CardHeader>
                   <CardTitle className="text-white">Send me a message</CardTitle>
                   <CardDescription className="text-gray-300">
-                    I'd love to hear about opportunities or collaborations!
+                    I&apos;d love to hear about opportunities or collaborations!
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
