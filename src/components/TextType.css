@@ -1,0 +1,50 @@
+.text-type {
+  display: inline-block;
+  position: relative;
+}
+
+.text-type__content {
+  display: inline;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.text-type__cursor {
+  display: inline;
+  color: currentColor;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+}
+
+.text-type__cursor--hidden {
+  opacity: 0;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Custom styles for different text types */
+.text-type--title {
+  font-weight: bold;
+}
+
+.text-type--subtitle {
+  font-weight: 500;
+}
+
+.text-type--highlight {
+  background: linear-gradient(45deg, #00d4ff, #0ea5e9);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

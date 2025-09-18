@@ -1,0 +1,94 @@
+.animated-gradient-text {
+  position: relative;
+  display: inline-block;
+}
+
+.text-content {
+  background-size: 400% 400%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: gradientAnimation infinite linear;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.gradient-overlay {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background-size: 400% 400%;
+  animation: gradientAnimation infinite linear;
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.3;
+  blur: 10px;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Variants for different text sizes */
+.animated-gradient-text--large {
+  font-size: 1.5em;
+}
+
+.animated-gradient-text--title {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.animated-gradient-text--subtitle {
+  font-weight: 600;
+  font-size: 1.2em;
+}
+
+/* Custom colors for data engineering theme */
+.animated-gradient-text--data-theme .text-content {
+  background-image: linear-gradient(to right, #00d4ff, #0ea5e9, #06b6d4, #0891b2, #00d4ff);
+}
+
+.animated-gradient-text--tech-theme .text-content {
+  background-image: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb, #1d4ed8, #60a5fa);
+}
+
+.animated-gradient-text--success-theme .text-content {
+  background-image: linear-gradient(to right, #34d399, #10b981, #059669, #047857, #34d399);
+}
+
+/* Smooth transitions */
+.animated-gradient-text {
+  transition: all 0.3s ease;
+}
+
+.animated-gradient-text:hover .text-content {
+  animation-duration: 2s;
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .text-content,
+  .gradient-overlay {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
