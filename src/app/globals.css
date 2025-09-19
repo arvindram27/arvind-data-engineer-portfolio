@@ -120,3 +120,70 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom styles for PillNav */
+.pill-nav-custom {
+  background: rgba(30, 27, 75, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 9999px;
+  padding: 4px;
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+}
+
+.pill-nav-custom .pill-nav-items {
+  background: rgba(30, 27, 75, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.pill-nav-custom .pill-logo {
+  background: rgba(139, 92, 246, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+}
+
+.pill-nav-custom .mobile-menu-button {
+  background: rgba(139, 92, 246, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(196, 181, 253, 0.3);
+}
+
+.pill-nav-custom .mobile-menu-popover {
+  background: rgba(30, 27, 75, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+}
+
+.pill-nav-custom .pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease;
+}
+
+.pill-nav-custom .pill.is-active {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+}
+
+/* SplitText Animation Styles */
+.split-text-description {
+  perspective: 1000px;
+}
+
+.split-text-description .split-element {
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.split-text-description .split-element:hover {
+  color: #c4b5fd;
+  transition: color 0.3s ease;
+}
+
+/* Add subtle glow effect for split text */
+.split-parent {
+  text-shadow: 0 0 30px rgba(196, 181, 253, 0.1);
+}

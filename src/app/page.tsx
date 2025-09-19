@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import Hyperspeed from "@/components/Hyperspeed";
 import MobileNav from "@/components/MobileNav";
+import PillNav from "@/components/PillNav";
 import TextType from "@/components/TextType";
+import SplitText from "@/components/SplitText";
 import GradientText from "@/components/GradientText";
 import SpotlightCard from "@/components/SpotlightCard";
 import ProfileCard from "@/components/ProfileCard";
@@ -75,10 +77,41 @@ const skillsData = {
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
+  const [activeHref, setActiveHref] = useState('#home');
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Handle scroll to update active navigation
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+      let current = '#home';
+      
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 100 && rect.bottom >= 100) {
+            current = `#${section}`;
+          }
+        }
+      }
+      setActiveHref(current);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Navigation items for PillNav
+  const navItems = [
+    { href: '#home', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#skills', label: 'Skills' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#experience', label: 'Experience' },
+    { href: '#contact', label: 'Contact' }
+  ];
 
   const hyperspeedOptions = {
     onSpeedUp: () => {},
@@ -121,53 +154,45 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex-shrink-0">
-              <span className="text-xl font-bold text-white">AR</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {["Home", "About", "Skills", "Projects", "Experience", "Contact"].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
-                    className="text-gray-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors"
-                  >
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <MobileNav sections={["Home", "About", "Skills", "Projects", "Experience", "Contact"]} />
-          </div>
-        </div>
-      </nav>
+      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+        <PillNav
+          logo="/logo.svg"
+          logoAlt="Arvind Ramachandran R"
+          items={navItems}
+          activeHref={activeHref}
+          baseColor="#8b5cf6"
+          pillColor="#1e1b4b"
+          hoveredPillTextColor="#ffffff"
+          pillTextColor="#c4b5fd"
+          className="pill-nav-custom"
+          ease="power2.easeOut"
+          initialLoadAnimation={true}
+        />
+      </div>
 
       {/* Hero Section with Hyperspeed Background */}
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-30">
+        <div className="absolute inset-0 z-0 opacity-20 sm:opacity-30">
           <Hyperspeed effectOptions={hyperspeedOptions} />
         </div>
         
-        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 transform transition-all duration-1000 ${
+        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-0 transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
           <div className="mb-6">
-            <div className="w-32 h-32 mx-auto mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Database className="w-16 h-16 text-white" />
+            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <Database className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-3 sm:mb-4">
               <GradientText 
                 colors={['#00d4ff', '#0ea5e9', '#06b6d4', '#0891b2', '#00d4ff']}
                 animationSpeed={6}
-                className="text-5xl md:text-7xl font-bold"
+                className="text-3xl sm:text-5xl md:text-7xl font-bold"
               >
                 Arvind Ramachandran R
               </GradientText>
             </h1>
-            <div className="text-2xl md:text-3xl text-gray-300 mb-6">
+            <div className="text-lg sm:text-2xl md:text-3xl text-gray-300 mb-4 sm:mb-6">
               <TextType
                 text={[
                   "Entry-Level Data Engineer",
@@ -185,49 +210,52 @@ export default function Home() {
                 cursorBlinkDuration={0.8}
               />
             </div>
-            <div className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
-              <TextType
+            <div className="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 max-w-xl sm:max-w-2xl mx-auto px-2 sm:px-0">
+              <SplitText
                 text="Passionate about transforming raw data into actionable insights through efficient data pipelines, analytics solutions, and modern data engineering practices."
-                as="p"
-                typingSpeed={30}
-                initialDelay={2000}
-                showCursor={false}
-                startOnVisible={true}
-                loop={false}
+                tag="p"
+                splitType="words"
+                delay={60}
+                duration={0.8}
+                ease="power3.out"
+                from={{ opacity: 0, y: 20, rotationX: 45 }}
+                to={{ opacity: 1, y: 0, rotationX: 0 }}
+                textAlign="center"
+                className="split-text-description"
               />
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-              <a href="#projects" className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 px-4 sm:px-0">
+            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
+              <a href="#projects" className="flex items-center justify-center gap-2 w-full">
                 View My Work
                 <ExternalLink className="w-4 h-4" />
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-              <a href="#contact" className="flex items-center gap-2">
+            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
+              <a href="#contact" className="flex items-center justify-center gap-2 w-full">
                 Get In Touch
                 <Mail className="w-4 h-4" />
               </a>
             </Button>
-            <Button size="lg" variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-              <a href="/resume.pdf" target="_blank" className="flex items-center gap-2">
+            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
+              <a href="/resume.pdf" target="_blank" className="flex items-center justify-center gap-2 w-full">
                 Download Resume
                 <Download className="w-4 h-4" />
               </a>
             </Button>
           </div>
           
-          <div className="flex justify-center space-x-6">
+          <div className="flex justify-center space-x-4 sm:space-x-6">
             <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Linkedin className="w-6 h-6" />
+              <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
             <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Github className="w-6 h-6" />
+              <Github className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
             <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Mail className="w-6 h-6" />
+              <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
             </a>
           </div>
         </div>
