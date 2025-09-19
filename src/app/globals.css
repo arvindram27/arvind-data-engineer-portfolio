@@ -209,3 +209,52 @@
 .split-parent {
   text-shadow: 0 0 30px rgba(196, 181, 253, 0.1);
 }
+
+/* Fix pill navigation buttons */
+.pill-nav button.pill-logo {
+  width: var(--nav-h);
+  height: var(--nav-h);
+  border-radius: 50%;
+  background: var(--base, #000);
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.pill-nav button.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 var(--pill-pad-x);
+  background: var(--pill-bg, #fff);
+  color: var(--pill-text, var(--base, #000));
+  text-decoration: none;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.pill-nav button.mobile-menu-link {
+  display: block;
+  padding: 12px 16px;
+  color: var(--pill-text, #fff);
+  background-color: var(--pill-bg, #fff);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}

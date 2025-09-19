@@ -218,6 +218,7 @@ const PillNav = ({
   const handleSmoothScroll = (e, href) => {
     if (isHashLink(href)) {
       e.preventDefault();
+      e.stopPropagation();
       const targetId = href.substring(1);
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
@@ -239,86 +240,46 @@ const PillNav = ({
   return (
     <div className="pill-nav-container">
       <nav className={`pill-nav ${className}`} aria-label="Primary" style={cssVars}>
-        {isRouterLink(items?.[0]?.href) ? (
-          <Link
-            className="pill-logo"
-            href={items[0].href}
-            aria-label="Home"
-            onMouseEnter={handleLogoEnter}
-            role="menuitem"
-            ref={el => {
-              logoRef.current = el;
-            }}
-          >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} />
-          </Link>
-        ) : (
-          <a
-            className="pill-logo"
-            href={items?.[0]?.href || '#'}
-            aria-label="Home"
-            onMouseEnter={handleLogoEnter}
-            onClick={(e) => handleSmoothScroll(e, items?.[0]?.href)}
-            ref={el => {
-              logoRef.current = el;
-            }}
-          >
-            <img src={logo} alt={logoAlt} ref={logoImgRef} />
-          </a>
-        )}
+        <button
+          className="pill-logo"
+          aria-label="Home"
+          onMouseEnter={handleLogoEnter}
+          onClick={(e) => handleSmoothScroll(e, items?.[0]?.href)}
+          ref={el => {
+            logoRef.current = el;
+          }}
+          style={{ background: 'transparent', border: 'none', padding: 0 }}
+        >
+          <img src={logo} alt={logoAlt} ref={logoImgRef} />
+        </button>
 
         <div className="pill-nav-items desktop-only" ref={navItemsRef}>
           <ul className="pill-list" role="menubar">
             {items.map((item, i) => (
               <li key={item.href || `item-${i}`} role="none">
-                {isRouterLink(item.href) ? (
-                  <Link
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                  >
-                    <span
-                      className="hover-circle"
-                      aria-hidden="true"
-                      ref={el => {
-                        circleRefs.current[i] = el;
-                      }}
-                    />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">
-                        {item.label}
-                      </span>
+                <button
+                  role="menuitem"
+                  className={`pill${activeHref === item.href ? ' is-active' : ''}`}
+                  aria-label={item.ariaLabel || item.label}
+                  onMouseEnter={() => handleEnter(i)}
+                  onMouseLeave={() => handleLeave(i)}
+                  onClick={(e) => handleSmoothScroll(e, item.href)}
+                  style={{ background: 'transparent', border: 'none' }}
+                >
+                  <span
+                    className="hover-circle"
+                    aria-hidden="true"
+                    ref={el => {
+                      circleRefs.current[i] = el;
+                    }}
+                  />
+                  <span className="label-stack">
+                    <span className="pill-label">{item.label}</span>
+                    <span className="pill-label-hover" aria-hidden="true">
+                      {item.label}
                     </span>
-                  </Link>
-                ) : (
-                  <a
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                    onClick={(e) => handleSmoothScroll(e, item.href)}
-                  >
-                    <span
-                      className="hover-circle"
-                      aria-hidden="true"
-                      ref={el => {
-                        circleRefs.current[i] = el;
-                      }}
-                    />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">
-                        {item.label}
-                      </span>
-                    </span>
-                  </a>
-                )}
+                  </span>
+                </button>
               </li>
             ))}
           </ul>
@@ -339,26 +300,16 @@ const PillNav = ({
         <ul className="mobile-menu-list">
           {items.map((item, i) => (
             <li key={item.href || `mobile-item-${i}`}>
-              {isRouterLink(item.href) ? (
-                <Link
-                  href={item.href}
-                  className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a
-                  href={item.href}
-                  className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={(e) => {
-                    handleSmoothScroll(e, item.href);
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  {item.label}
-                </a>
-              )}
+              <button
+                className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
+                onClick={(e) => {
+                  handleSmoothScroll(e, item.href);
+                  setIsMobileMenuOpen(false);
+                }}
+                style={{ background: 'transparent', border: 'none', width: '100%', textAlign: 'left' }}
+              >
+                {item.label}
+              </button>
             </li>
           ))}
         </ul>
