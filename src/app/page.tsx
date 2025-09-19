@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Hyperspeed from "@/components/Hyperspeed";
-import MobileNav from "@/components/MobileNav";
 import PillNav from "@/components/PillNav";
 import TextType from "@/components/TextType";
 import SplitText from "@/components/SplitText";
