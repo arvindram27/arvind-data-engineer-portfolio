@@ -267,17 +267,17 @@ export default function NavBar({
 
       {/* Mobile Navigation */}
       <nav className="md:hidden">
-        {/* Hamburger Button */}
+        {/* Hamburger Button - Bottom Right */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className={`
-            fixed top-4 right-4 z-50
-            w-12 h-12 rounded-full
+            fixed bottom-6 right-6 z-50
+            w-14 h-14 rounded-full
             bg-gradient-to-r from-red-600 to-orange-600
             shadow-lg shadow-red-600/25
             flex items-center justify-center
             transition-all duration-300
-            ${isMobileMenuOpen ? 'scale-90' : 'hover:scale-105'}
+            ${isMobileMenuOpen ? 'scale-90 rotate-180' : 'hover:scale-110'}
           `}
           aria-label="Toggle menu"
         >
@@ -319,7 +319,7 @@ export default function NavBar({
         <div 
           className={`
             fixed inset-0 z-40
-            bg-black/60 backdrop-blur-sm
+            bg-black/40 backdrop-blur-sm
             transition-opacity duration-300
             ${isMobileMenuOpen 
               ? 'opacity-100 pointer-events-auto' 
@@ -329,69 +329,82 @@ export default function NavBar({
           onClick={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Slide Menu */}
+        {/* Slide-up Menu Panel - Compact */}
         <div 
           className={`
-            fixed top-0 right-0 bottom-0 z-45 w-72
-            transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1)
+            fixed bottom-0 left-0 right-0 z-45
+            max-h-[70vh] rounded-t-2xl
+            transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)
             ${isMobileMenuOpen 
-              ? 'translate-x-0' 
-              : 'translate-x-full'
+              ? 'translate-y-0' 
+              : 'translate-y-full'
             }
           `}
           style={{
-            background: 'rgba(17, 24, 39, 0.85)',
+            background: 'rgba(17, 24, 39, 0.95)',
             backdropFilter: 'blur(24px) saturate(180%)',
             WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
-            boxShadow: '-20px 0 40px rgba(0, 0, 0, 0.5)'
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.3)'
           }}
         >
-          {/* Logo Header */}
-          <div className="p-6 border-b border-red-600/10">
-            <div className="flex items-center gap-3">
-              <Image 
-                src={logo} 
-                alt={logoAlt}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-              <div className="text-white font-semibold">Navigation</div>
-            </div>
+          {/* Drag Handle */}
+          <div className="py-3 px-4">
+            <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-2"></div>
           </div>
 
-          {/* Menu Items */}
-          <ul className="p-4">
-            {items.map((item, index) => {
-              const isActive = activeHref === item.href;
-              return (
-                <li key={index} className="mb-2">
+          {/* Menu Items - Compact Grid */}
+          <div className="px-4 pb-6 max-h-[60vh] overflow-y-auto">
+            <div className="grid grid-cols-2 gap-3">
+              {items.map((item, index) => {
+                const isActive = activeHref === item.href;
+                return (
                   <button
+                    key={index}
                     onClick={() => scrollToSection(item.href)}
                     className={`
-                      w-full text-left px-4 py-3 rounded-lg
+                      flex flex-col items-center justify-center
+                      px-4 py-6 rounded-xl
                       transition-all duration-200
                       ${isActive 
                         ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg shadow-red-600/25' 
-                        : 'text-red-200/80 hover:bg-red-600/10 hover:text-white'
+                        : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white'
                       }
                     `}
                   >
-                    <span className="flex items-center gap-3">
-                      <span 
-                        className={`
-                          w-2 h-2 rounded-full
-                          ${isActive ? 'bg-white' : 'bg-red-600/40'}
-                        `}
-                      />
-                      {item.label}
-                    </span>
+                    {/* Icon based on section */}
+                    {item.href === '#home' && <div className="text-2xl mb-2">🏠</div>}
+                    {item.href === '#about' && <div className="text-2xl mb-2">👤</div>}
+                    {item.href === '#skills' && <div className="text-2xl mb-2">💡</div>}
+                    {item.href === '#projects' && <div className="text-2xl mb-2">🚀</div>}
+                    {item.href === '#experience' && <div className="text-2xl mb-2">💼</div>}
+                    {item.href === '#contact' && <div className="text-2xl mb-2">📧</div>}
+                    <span className="text-sm font-medium">{item.label}</span>
                   </button>
-                </li>
-              );
-            })}
-          </ul>
+                );
+              })}
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <div className="grid grid-cols-2 gap-3">
+                <a 
+                  href="/resume.pdf" 
+                  target="_blank" 
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-orange-600/20 text-orange-400 rounded-lg hover:bg-orange-600/30 transition-colors"
+                >
+                  <span className="text-sm">Resume</span>
+                </a>
+                <a 
+                  href="https://github.com/arvind-ramachandran" 
+                  target="_blank"
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  <span className="text-sm">GitHub</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
 

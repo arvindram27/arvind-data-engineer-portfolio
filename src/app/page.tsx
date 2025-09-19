@@ -245,16 +245,15 @@ export default function Home() {
             <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
               <Database className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
             </div>
-            <h1 className="text-2xl sm:text-4xl md:text-7xl font-bold mb-2 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold mb-2 sm:mb-4">
               <GradientText 
                 colors={['#00d4ff', '#0ea5e9', '#06b6d4', '#0891b2', '#00d4ff']}
                 animationSpeed={6}
-                className="text-2xl sm:text-4xl md:text-7xl font-bold leading-tight"
-              >
+                className="text-3xl sm:text-4xl md:text-7xl font-bold leading-tight">
                 Arvind Ramachandran R
               </GradientText>
             </h1>
-            <div className="text-base sm:text-xl md:text-3xl text-gray-300 mb-3 sm:mb-6">
+            <div className="text-lg sm:text-xl md:text-3xl text-gray-300 mb-3 sm:mb-6">
               <TextType
                 text={[
                   "Entry-Level Data Engineer",
@@ -348,8 +347,8 @@ export default function Home() {
       <section id="about" className="py-12 sm:py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-16">
-            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">About Me</h2>
-            <p className="text-base sm:text-xl text-gray-400 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">About Me</h2>
+            <p className="text-sm sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
               As an entry-level data engineer, I&apos;m passionate about building robust data solutions that drive business value.
             </p>
           </div>
@@ -375,7 +374,7 @@ export default function Home() {
             </div>
             
             <div className="md:col-span-2">
-              <h3 className="text-2xl font-semibold mb-4">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                 <GradientText 
                   colors={['#34d399', '#10b981', '#059669', '#047857', '#34d399']}
                   animationSpeed={8}
@@ -394,32 +393,31 @@ export default function Home() {
                 I specialize in building scalable data infrastructure that enables organizations to make data-driven decisions.
               </p>
               
-              <div className="grid grid-cols-2 gap-6 mt-8">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400 mb-2">10+</div>
-                  <div className="text-gray-400">Projects Completed</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-400 mb-1 sm:mb-2">10+</div>
+                  <div className="text-xs sm:text-sm text-gray-400">Projects Completed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400 mb-2">100GB+</div>
-                  <div className="text-gray-400">Data Processed</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-400 mb-1 sm:mb-2">100GB+</div>
+                  <div className="text-xs sm:text-sm text-gray-400">Data Processed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400 mb-2">2+</div>
-                  <div className="text-gray-400">Years Learning</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-400 mb-1 sm:mb-2">2+</div>
+                  <div className="text-xs sm:text-sm text-gray-400">Years Learning</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-400 mb-2">5+</div>
-                  <div className="text-gray-400">Technologies Mastered</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-orange-400 mb-1 sm:mb-2">5+</div>
+                  <div className="text-xs sm:text-sm text-gray-400">Technologies Mastered</div>
                 </div>
               </div>
               
-              <div className="bg-gray-700 rounded-lg p-8 mt-8">
-                <h3 className="text-2xl font-semibold mb-6">
+              <div className="bg-gray-700 rounded-lg p-4 sm:p-8 mt-8">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
                   <GradientText 
                     colors={['#fb923c', '#ea580c', '#c2410c', '#9a3412', '#fb923c']}
                     animationSpeed={7}
-                    className="animated-gradient-text--subtitle"
-                  >
+                    className="text-xl sm:text-2xl font-semibold">
                     What I Bring
                   </GradientText>
                 </h3>
@@ -444,19 +442,18 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 bg-gray-900">
+      <section id="skills" className="py-12 sm:py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
               <GradientText 
                 colors={['#fbbf24', '#f59e0b', '#d97706', '#b45309', '#fbbf24']}
                 animationSpeed={5}
-                className="animated-gradient-text--title"
-              >
+                className="text-2xl sm:text-3xl md:text-4xl font-bold">
                 Technical Skills
               </GradientText>
             </h2>
-            <p className="text-xl text-gray-400">Technologies and tools I work with</p>
+            <p className="text-sm sm:text-lg md:text-xl text-gray-400">Technologies and tools I work with</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -488,19 +485,18 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 bg-gray-800">
+      <section id="projects" className="py-12 sm:py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
               <GradientText 
                 colors={['#ec4899', '#db2777', '#be185d', '#9d174d', '#ec4899']}
                 animationSpeed={6}
-                className="animated-gradient-text--title"
-              >
+                className="text-2xl sm:text-3xl md:text-4xl font-bold">
                 Featured Projects
               </GradientText>
             </h2>
-            <p className="text-xl text-gray-400">Some of my recent data engineering work</p>
+            <p className="text-sm sm:text-lg md:text-xl text-gray-400">Some of my recent data engineering work</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -549,11 +545,11 @@ export default function Home() {
       </section>
 
       {/* Experience Section */}
-      <section id="experience" className="py-20 bg-gray-900">
+      <section id="experience" className="py-12 sm:py-20 bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Professional Experience</h2>
-            <p className="text-xl text-gray-400">My journey in data engineering</p>
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">Professional Experience</h2>
+            <p className="text-sm sm:text-lg md:text-xl text-gray-400">My journey in data engineering</p>
           </div>
           
           <div className="max-w-4xl mx-auto">
@@ -593,11 +589,11 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gray-800">
+      <section id="contact" className="py-12 sm:py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Get In Touch</h2>
-            <p className="text-xl text-gray-400">Let&apos;s connect and discuss data engineering opportunities</p>
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">Get In Touch</h2>
+            <p className="text-sm sm:text-lg md:text-xl text-gray-400">Let&apos;s connect and discuss data engineering opportunities</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-12">
