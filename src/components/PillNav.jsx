@@ -210,10 +210,24 @@ const PillNav = ({
     href.startsWith('https://') ||
     href.startsWith('//') ||
     href.startsWith('mailto:') ||
-    href.startsWith('tel:') ||
-    href.startsWith('#');
+    href.startsWith('tel:');
 
-  const isRouterLink = href => href && !isExternalLink(href);
+  const isHashLink = href => href && href.startsWith('#');
+  const isRouterLink = href => href && !isExternalLink(href) && !isHashLink(href);
+
+  const handleSmoothScroll = (e, href) => {
+    if (isHashLink(href)) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
 
   const cssVars = {
     ['--base']: baseColor,
@@ -244,6 +258,7 @@ const PillNav = ({
             href={items?.[0]?.href || '#'}
             aria-label="Home"
             onMouseEnter={handleLogoEnter}
+            onClick={(e) => handleSmoothScroll(e, items?.[0]?.href)}
             ref={el => {
               logoRef.current = el;
             }}
@@ -287,6 +302,7 @@ const PillNav = ({
                     aria-label={item.ariaLabel || item.label}
                     onMouseEnter={() => handleEnter(i)}
                     onMouseLeave={() => handleLeave(i)}
+                    onClick={(e) => handleSmoothScroll(e, item.href)}
                   >
                     <span
                       className="hover-circle"
@@ -335,7 +351,10 @@ const PillNav = ({
                 <a
                   href={item.href}
                   className={`mobile-menu-link${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    handleSmoothScroll(e, item.href);
+                    setIsMobileMenuOpen(false);
+                  }}
                 >
                   {item.label}
                 </a>
