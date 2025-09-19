@@ -6,6 +6,7 @@ import MobileNav from "@/components/MobileNav";
 import TextType from "@/components/TextType";
 import GradientText from "@/components/GradientText";
 import SpotlightCard from "@/components/SpotlightCard";
+import ProfileCard from "@/components/ProfileCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -249,8 +250,26 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+          <div className="grid md:grid-cols-3 gap-12 items-start">
+            {/* Profile Card */}
+            <div className="flex justify-center">
+              <ProfileCard
+                avatarUrl="/images/profile.jpg"
+                name="Arvind Ramachandran R"
+                title="Entry-Level Data Engineer"
+                handle="arvind-ramachandran"
+                status="Available for Opportunities"
+                contactText="Contact Me"
+                showUserInfo={true}
+                enableTilt={true}
+                onContactClick={() => {
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="max-w-sm"
+              />
+            </div>
+            
+            <div className="md:col-span-2">
               <h3 className="text-2xl font-semibold mb-4">
                 <GradientText 
                   colors={['#34d399', '#10b981', '#059669', '#047857', '#34d399']}
@@ -288,32 +307,32 @@ export default function Home() {
                   <div className="text-gray-400">Technologies Mastered</div>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-gray-700 rounded-lg p-8">
-              <h3 className="text-2xl font-semibold mb-6">
-                <GradientText 
-                  colors={['#60a5fa', '#3b82f6', '#2563eb', '#1d4ed8', '#60a5fa']}
-                  animationSpeed={7}
-                  className="animated-gradient-text--subtitle"
-                >
-                  What I Bring
-                </GradientText>
-              </h3>
-              <ul className="space-y-4">
-                {[
-                  "Strong foundation in data engineering principles",
-                  "Experience with modern data stack technologies",
-                  "Passion for learning and adapting to new tools",
-                  "Collaborative mindset and problem-solving skills",
-                  "Focus on building scalable and maintainable solutions"
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span className="text-gray-300">{item}</span>
-                  </li>
-                ))}
-              </ul>
+              
+              <div className="bg-gray-700 rounded-lg p-8 mt-8">
+                <h3 className="text-2xl font-semibold mb-6">
+                  <GradientText 
+                    colors={['#60a5fa', '#3b82f6', '#2563eb', '#1d4ed8', '#60a5fa']}
+                    animationSpeed={7}
+                    className="animated-gradient-text--subtitle"
+                  >
+                    What I Bring
+                  </GradientText>
+                </h3>
+                <ul className="space-y-4">
+                  {[
+                    "Strong foundation in data engineering principles",
+                    "Experience with modern data stack technologies",
+                    "Passion for learning and adapting to new tools",
+                    "Collaborative mindset and problem-solving skills",
+                    "Focus on building scalable and maintainable solutions"
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <span className="text-gray-300">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
