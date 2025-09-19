@@ -256,8 +256,6 @@ export default function Home() {
               <ProfileCard
                 avatarUrl="/images/profile.jpg"
                 miniAvatarUrl="/images/profile.jpg"
-                name="Arvind Ramachandran R"
-                title="Entry-Level Data Engineer"
                 handle="arvind-ramachandran"
                 status="Available for Opportunities"
                 contactText="Contact Me"
@@ -268,7 +266,7 @@ export default function Home() {
                 onContactClick={() => {
                   document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="max-w-sm"
+                className="max-w-xs"
               />
             </div>
             
