@@ -255,6 +255,7 @@ export default function Home() {
             <div className="flex justify-center">
               <ProfileCard
                 avatarUrl="/images/profile.jpg"
+                miniAvatarUrl="/images/profile.jpg"
                 name="Arvind Ramachandran R"
                 title="Entry-Level Data Engineer"
                 handle="arvind-ramachandran"
@@ -262,6 +263,8 @@ export default function Home() {
                 contactText="Contact Me"
                 showUserInfo={true}
                 enableTilt={true}
+                behindGradient={undefined}
+                innerGradient={undefined}
                 onContactClick={() => {
                   document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                 }}
