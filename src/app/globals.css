@@ -149,6 +149,28 @@
   border: 1px solid rgba(196, 181, 253, 0.3);
 }
 
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  .pill-nav-custom {
+    background: rgba(30, 27, 75, 0.95);
+    border-radius: 21px;
+    margin: 0 auto;
+    max-width: calc(100% - 2rem);
+  }
+  
+  .pill-nav-custom .pill-nav-items {
+    display: none !important;
+  }
+  
+  .pill-nav-custom .pill-logo {
+    background: rgba(139, 92, 246, 0.95);
+  }
+  
+  .pill-nav-custom .mobile-menu-button {
+    background: rgba(139, 92, 246, 0.95);
+  }
+}
+
 .pill-nav-custom .mobile-menu-popover {
   background: rgba(30, 27, 75, 0.95);
   backdrop-filter: blur(16px);

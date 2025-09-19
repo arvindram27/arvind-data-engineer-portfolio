@@ -153,20 +153,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Navigation */}
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-        <PillNav
-          logo="/logo.svg"
-          logoAlt="Arvind Ramachandran R"
-          items={navItems}
-          activeHref={activeHref}
-          baseColor="#8b5cf6"
-          pillColor="#1e1b4b"
-          hoveredPillTextColor="#ffffff"
-          pillTextColor="#c4b5fd"
-          className="pill-nav-custom"
-          ease="power2.easeOut"
-          initialLoadAnimation={true}
-        />
+      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+        <div className="pill-nav-container">
+          <PillNav
+            logo="/logo.svg"
+            logoAlt="Arvind Ramachandran R"
+            items={navItems}
+            activeHref={activeHref}
+            baseColor="#8b5cf6"
+            pillColor="#1e1b4b"
+            hoveredPillTextColor="#ffffff"
+            pillTextColor="#c4b5fd"
+            className="pill-nav-custom"
+            ease="power2.easeOut"
+            initialLoadAnimation={true}
+          />
+        </div>
       </div>
 
       {/* Hero Section with Hyperspeed Background */}
@@ -175,7 +177,7 @@ export default function Home() {
           <Hyperspeed effectOptions={hyperspeedOptions} />
         </div>
         
-        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-0 transform transition-all duration-1000 ${
+        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-16 md:pt-0 transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
           <div className="mb-6">
