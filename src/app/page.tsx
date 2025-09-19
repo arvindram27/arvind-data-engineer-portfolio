@@ -11,11 +11,16 @@ import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database
 import { createIntersectionObserver, throttle, preloadCriticalResources, measurePerformance } from "@/lib/performance";
 import { registerServiceWorker, measureWebVitals, monitorResourceLoading } from "@/lib/sw";
 
-// Import critical above-the-fold components synchronously for instant loading
-import PillNav from "@/components/PillNav";
+// Import critical text components synchronously for instant loading
 import TextType from "@/components/TextType";
 import SplitText from "@/components/SplitText";
 import GradientText from "@/components/GradientText";
+import SimpleNav from "@/components/SimpleNav";
+
+// PillNav loads progressively after initial render
+const PillNav = dynamic(() => import("@/components/PillNav"), {
+  ssr: false
+});
 
 // Keep heavy components dynamic (below fold or performance-intensive)
 const Hyperspeed = dynamic(() => import("@/components/Hyperspeed"), {
@@ -99,6 +104,7 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeHref, setActiveHref] = useState('#home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pillNavReady, setPillNavReady] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -113,6 +119,15 @@ export default function Home() {
     // Start web vitals monitoring
     measureWebVitals();
     monitorResourceLoading();
+    
+    // Delay PillNav loading to ensure smooth initial render
+    const pillNavTimer = setTimeout(() => {
+      setPillNavReady(true);
+    }, 1000); // Load PillNav after 1 second
+    
+    return () => {
+      clearTimeout(pillNavTimer);
+    };
     
     // Optimized scroll handler
     const handleScroll = () => {
@@ -152,19 +167,25 @@ export default function Home() {
       const cleanup = () => {
         sections.forEach(sectionId => {
           const element = document.getElementById(sectionId);
-          if (element) observer.observe(element);
+          if (element && observer) observer.observe(element);
         });
       };
       
       // Delay observation to ensure DOM is ready
       setTimeout(cleanup, 100);
       
-      return () => observer.disconnect();
+      return () => {
+        if (observer) observer.disconnect();
+        clearTimeout(pillNavTimer);
+      };
     } else {
       // Fallback to throttled scroll listener
       const throttledScroll = throttle(handleScroll, 16);
       window.addEventListener('scroll', throttledScroll, { passive: true });
-      return () => window.removeEventListener('scroll', throttledScroll);
+      return () => {
+        window.removeEventListener('scroll', throttledScroll);
+        clearTimeout(pillNavTimer);
+      };
     }
   }, []);
 
@@ -226,24 +247,33 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Navigation - Hidden on mobile */}
-      <div className="fixed top-0 left-0 right-0 z-50 justify-center hidden md:flex">
-        <div className="pill-nav-container">
-          <PillNav
-            logo="/logo.svg"
-            logoAlt="Arvind Ramachandran R"
-            items={navItems}
-            activeHref={activeHref}
-            baseColor="#ef4444"
-            pillColor="#1f2937"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="#fca5a5"
-            className="pill-nav-custom"
-            ease="power2.easeOut"
-            initialLoadAnimation={true}
-          />
+      {/* Hybrid Navigation - SimpleNav first, then PillNav */}
+      {!pillNavReady ? (
+        <SimpleNav
+          logo="/logo.svg"
+          logoAlt="Arvind Ramachandran R"
+          items={navItems}
+          activeHref={activeHref}
+        />
+      ) : (
+        <div className="fixed top-0 left-0 right-0 z-50 justify-center hidden md:flex">
+          <div className="pill-nav-container">
+            <PillNav
+              logo="/logo.svg"
+              logoAlt="Arvind Ramachandran R"
+              items={navItems}
+              activeHref={activeHref}
+              baseColor="#ef4444"
+              pillColor="#1f2937"
+              hoveredPillTextColor="#ffffff"
+              pillTextColor="#fca5a5"
+              className="pill-nav-custom"
+              ease="power2.easeOut"
+              initialLoadAnimation={true}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile Floating Menu */}
       <div className="md:hidden fixed bottom-6 right-6 z-50">
