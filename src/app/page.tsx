@@ -1,19 +1,53 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Hyperspeed from "@/components/Hyperspeed";
-import PillNav from "@/components/PillNav";
-import TextType from "@/components/TextType";
-import SplitText from "@/components/SplitText";
-import GradientText from "@/components/GradientText";
-import SpotlightCard from "@/components/SpotlightCard";
-import ProfileCard from "@/components/ProfileCard";
+import { useState, useEffect, Suspense } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database, BarChart, Cloud, Code, Cpu } from "lucide-react";
+import { createIntersectionObserver, throttle, preloadCriticalResources, measurePerformance } from "@/lib/performance";
+import { registerServiceWorker, measureWebVitals, monitorResourceLoading } from "@/lib/sw";
+
+// Lazy load heavy components
+const Hyperspeed = dynamic(() => import("@/components/Hyperspeed"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-gray-900" />
+});
+
+const PillNav = dynamic(() => import("@/components/PillNav"), {
+  ssr: false,
+  loading: () => null
+});
+
+const TextType = dynamic(() => import("@/components/TextType"), {
+  ssr: false,
+  loading: () => <span>Data Engineer</span>
+});
+
+const SplitText = dynamic(() => import("@/components/SplitText"), {
+  ssr: false,
+  loading: () => <span>Building the future of data infrastructure</span>
+});
+
+const GradientText = dynamic(() => import("@/components/GradientText"), {
+  ssr: false,
+  loading: () => <span>Loading...</span>
+});
+
+const SpotlightCard = dynamic(() => import("@/components/SpotlightCard"), {
+  ssr: false,
+  loading: () => <Card className="bg-gray-800/50 border-gray-700">
+    <div className="animate-pulse h-32 bg-gray-700 rounded" />
+  </Card>
+});
+
+const ProfileCard = dynamic(() => import("@/components/ProfileCard"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-700 rounded-lg h-96 max-w-xs" />
+});
 
 const projectsData = [
   {
@@ -82,7 +116,18 @@ export default function Home() {
   useEffect(() => {
     setIsVisible(true);
     
-    // Handle scroll to update active navigation
+    // Initialize performance optimizations
+    preloadCriticalResources();
+    measurePerformance();
+    
+    // Register service worker for caching
+    registerServiceWorker();
+    
+    // Start web vitals monitoring
+    measureWebVitals();
+    monitorResourceLoading();
+    
+    // Optimized scroll handler
     const handleScroll = () => {
       const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
       let current = '#home';
@@ -99,8 +144,41 @@ export default function Home() {
       setActiveHref(current);
     };
     
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Use intersection observer for better performance
+    const observer = createIntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHref(`#${entry.target.id}`);
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+        rootMargin: '-80px 0px -80px 0px'
+      }
+    );
+    
+    if (observer) {
+      // Observer available - use it
+      const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+      const cleanup = () => {
+        sections.forEach(sectionId => {
+          const element = document.getElementById(sectionId);
+          if (element) observer.observe(element);
+        });
+      };
+      
+      // Delay observation to ensure DOM is ready
+      setTimeout(cleanup, 100);
+      
+      return () => observer.disconnect();
+    } else {
+      // Fallback to throttled scroll listener
+      const throttledScroll = throttle(handleScroll, 16);
+      window.addEventListener('scroll', throttledScroll, { passive: true });
+      return () => window.removeEventListener('scroll', throttledScroll);
+    }
   }, []);
 
   // Mobile navigation functions
@@ -169,10 +247,10 @@ export default function Home() {
             logoAlt="Arvind Ramachandran R"
             items={navItems}
             activeHref={activeHref}
-            baseColor="#8b5cf6"
-            pillColor="#1e1b4b"
+            baseColor="#ef4444"
+            pillColor="#1f2937"
             hoveredPillTextColor="#ffffff"
-            pillTextColor="#c4b5fd"
+            pillTextColor="#fca5a5"
             className="pill-nav-custom"
             ease="power2.easeOut"
             initialLoadAnimation={true}
@@ -185,7 +263,7 @@ export default function Home() {
         <div className="relative">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="w-14 h-14 bg-gradient-to-r from-red-600 to-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             <svg 
               className={`w-6 h-6 transition-transform duration-300 ${
@@ -205,7 +283,7 @@ export default function Home() {
           </button>
           
           {mobileMenuOpen && (
-            <div className="absolute bottom-16 right-0 bg-gray-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 min-w-48 border border-purple-500/30">
+            <div className="absolute bottom-16 right-0 bg-gray-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 min-w-48 border border-red-500/30">
               {[
                 { id: 'home', label: 'Home' },
                 { id: 'about', label: 'About' },
@@ -219,7 +297,7 @@ export default function Home() {
                   onClick={() => scrollToSection(item.id)}
                   className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                     activeHref === `#${item.id}` 
-                      ? 'bg-purple-600 text-white' 
+                      ? 'bg-red-600 text-white' 
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
@@ -241,7 +319,7 @@ export default function Home() {
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
           <div className="mb-6">
-            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
               <Database className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
             </div>
             <h1 className="text-2xl sm:text-4xl md:text-7xl font-bold mb-2 sm:mb-4">
@@ -290,7 +368,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center mb-4 sm:mb-8 px-6 sm:px-0">
             <Button 
               size="sm" 
-              className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
+              className="bg-red-600 hover:bg-red-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -303,7 +381,7 @@ export default function Home() {
             </Button>
             <Button 
               size="sm" 
-              className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
+              className="bg-red-600 hover:bg-red-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -314,7 +392,7 @@ export default function Home() {
                 <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
               </span>
             </Button>
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base">
+            <Button size="sm" className="bg-red-600 hover:bg-red-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base">
               <a href="/resume.pdf" target="_blank" className="flex items-center justify-center gap-2 w-full">
                 Download Resume
                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -323,13 +401,13 @@ export default function Home() {
           </div>
           
           <div className="flex justify-center space-x-3 sm:space-x-6">
-            <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
+            <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-red-400 transition-colors">
               <Linkedin className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
-            <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
+            <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-orange-400 transition-colors">
               <Github className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
-            <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-blue-400 transition-colors">
+            <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-red-400 transition-colors">
               <Mail className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
           </div>
@@ -356,21 +434,23 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-12 items-start">
             {/* Profile Card */}
             <div className="flex justify-center">
-              <ProfileCard
-                avatarUrl="/images/profile.jpg"
-                miniAvatarUrl="/images/profile.jpg"
-                handle="arvind-ramachandran"
-                status="Available for Opportunities"
-                contactText="Contact Me"
-                showUserInfo={true}
-                enableTilt={true}
-                behindGradient={undefined}
-                innerGradient={undefined}
-                onContactClick={() => {
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="max-w-xs"
-              />
+              <Suspense fallback={<div className="animate-pulse bg-gray-700 rounded-lg h-96 max-w-xs w-full" />}>
+                <ProfileCard
+                  avatarUrl="/images/profile.jpg"
+                  miniAvatarUrl="/images/profile.jpg"
+                  handle="arvind-ramachandran"
+                  status="Available for Opportunities"
+                  contactText="Contact Me"
+                  showUserInfo={true}
+                  enableTilt={true}
+                  behindGradient={undefined}
+                  innerGradient={undefined}
+                  onContactClick={() => {
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="max-w-xs"
+                />
+              </Suspense>
             </div>
             
             <div className="md:col-span-2">
@@ -395,19 +475,19 @@ export default function Home() {
               
               <div className="grid grid-cols-2 gap-6 mt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">10+</div>
+                  <div className="text-3xl font-bold text-orange-400 mb-2">10+</div>
                   <div className="text-gray-400">Projects Completed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">100GB+</div>
+                  <div className="text-3xl font-bold text-orange-400 mb-2">100GB+</div>
                   <div className="text-gray-400">Data Processed</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">2+</div>
+                  <div className="text-3xl font-bold text-orange-400 mb-2">2+</div>
                   <div className="text-gray-400">Years Learning</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">5+</div>
+                  <div className="text-3xl font-bold text-orange-400 mb-2">5+</div>
                   <div className="text-gray-400">Technologies Mastered</div>
                 </div>
               </div>
@@ -415,7 +495,7 @@ export default function Home() {
               <div className="bg-gray-700 rounded-lg p-8 mt-8">
                 <h3 className="text-2xl font-semibold mb-6">
                   <GradientText 
-                    colors={['#60a5fa', '#3b82f6', '#2563eb', '#1d4ed8', '#60a5fa']}
+                    colors={['#fb923c', '#ea580c', '#c2410c', '#9a3412', '#fb923c']}
                     animationSpeed={7}
                     className="animated-gradient-text--subtitle"
                   >
@@ -431,7 +511,7 @@ export default function Home() {
                     "Focus on building scalable and maintainable solutions"
                   ].map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                      <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                       <span className="text-gray-300">{item}</span>
                     </li>
                   ))}
@@ -460,7 +540,7 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {Object.entries(skillsData).map(([category, skills], index) => (
-              <SpotlightCard key={index} className="bg-gray-800/50 border-gray-700 backdrop-blur-sm" spotlightColor="rgba(59, 130, 246, 0.15)">
+              <SpotlightCard key={index} className="bg-gray-800/50 border-gray-700 backdrop-blur-sm" spotlightColor="rgba(251, 146, 60, 0.15)">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     {category === "Programming Languages" && <Code className="w-5 h-5" />}
@@ -474,7 +554,7 @@ export default function Home() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {skills.map((skill, skillIndex) => (
-                      <Badge key={skillIndex} variant="secondary" className="bg-blue-600 text-white">
+                      <Badge key={skillIndex} variant="secondary" className="bg-orange-600 text-white">
                         {skill}
                       </Badge>
                     ))}
@@ -519,7 +599,7 @@ export default function Home() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.map((tech, techIndex) => (
-                      <Badge key={techIndex} variant="outline" className="text-blue-400 border-blue-400">
+                      <Badge key={techIndex} variant="outline" className="text-orange-400 border-orange-400">
                         {tech}
                       </Badge>
                     ))}
@@ -563,7 +643,7 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                       <div>
                         <CardTitle className="text-white text-xl">{exp.title}</CardTitle>
-                        <CardDescription className="text-blue-400 font-medium">{exp.company}</CardDescription>
+                        <CardDescription className="text-orange-400 font-medium">{exp.company}</CardDescription>
                       </div>
                       <Badge variant="outline" className="text-gray-400 border-gray-600 mt-2 md:mt-0">
                         {exp.period}
@@ -577,7 +657,7 @@ export default function Home() {
                       <ul className="space-y-1">
                         {exp.achievements.map((achievement, achievementIndex) => (
                           <li key={achievementIndex} className="flex items-start">
-                            <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                            <div className="w-2 h-2 bg-orange-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                             <span className="text-gray-300">{achievement}</span>
                           </li>
                         ))}
@@ -604,15 +684,15 @@ export default function Home() {
               <h3 className="text-2xl font-semibold text-white mb-6">Contact Information</h3>
               <div className="space-y-4">
                 <div className="flex items-center">
-                  <Mail className="w-5 h-5 text-blue-400 mr-3" />
+                  <Mail className="w-5 h-5 text-orange-400 mr-3" />
                   <span className="text-gray-300">arvind.ramachandran@email.com</span>
                 </div>
                 <div className="flex items-center">
-                  <Phone className="w-5 h-5 text-blue-400 mr-3" />
+                  <Phone className="w-5 h-5 text-orange-400 mr-3" />
                   <span className="text-gray-300">+1 (555) 123-4567</span>
                 </div>
                 <div className="flex items-center">
-                  <MapPin className="w-5 h-5 text-blue-400 mr-3" />
+                  <MapPin className="w-5 h-5 text-orange-400 mr-3" />
                   <span className="text-gray-300">Chennai, Tamil Nadu, India</span>
                 </div>
               </div>
@@ -620,13 +700,13 @@ export default function Home() {
               <div className="mt-8">
                 <h4 className="text-lg font-medium text-white mb-4">Connect with me</h4>
                 <div className="flex space-x-4">
-                  <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-orange-400 transition-colors">
                     <Linkedin className="w-8 h-8" />
                   </a>
-                  <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-orange-400 transition-colors">
                     <Github className="w-8 h-8" />
                   </a>
-                  <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-orange-400 transition-colors">
                     <Mail className="w-8 h-8" />
                   </a>
                 </div>
@@ -657,7 +737,7 @@ export default function Home() {
                       rows={5} 
                       className="bg-gray-800 border-gray-600 text-white" 
                     />
-                    <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
                       Send Message
                     </Button>
                   </form>

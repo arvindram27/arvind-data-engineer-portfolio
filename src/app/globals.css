@@ -123,36 +123,36 @@
 
 /* Custom styles for PillNav */
 .pill-nav-custom {
-  background: rgba(30, 27, 75, 0.85);
+  background: rgba(31, 41, 55, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 9999px;
   padding: 4px;
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 32px rgba(239, 68, 68, 0.2);
 }
 
 .pill-nav-custom .pill-nav-items {
-  background: rgba(30, 27, 75, 0.9);
+  background: rgba(31, 41, 55, 0.9);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .pill-nav-custom .pill-logo {
-  background: rgba(139, 92, 246, 0.9);
+  background: rgba(239, 68, 68, 0.9);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(196, 181, 253, 0.3);
+  border: 1px solid rgba(252, 165, 165, 0.3);
 }
 
 .pill-nav-custom .mobile-menu-button {
-  background: rgba(139, 92, 246, 0.9);
+  background: rgba(239, 68, 68, 0.9);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(196, 181, 253, 0.3);
+  border: 1px solid rgba(252, 165, 165, 0.3);
 }
 
 /* Mobile-specific fixes */
 @media (max-width: 768px) {
   .pill-nav-custom {
-    background: rgba(30, 27, 75, 0.95);
+    background: rgba(31, 41, 55, 0.95);
     border-radius: 21px;
     margin: 0 auto;
     max-width: calc(100% - 2rem);
@@ -163,34 +163,69 @@
   }
   
   .pill-nav-custom .pill-logo {
-    background: rgba(139, 92, 246, 0.95);
+    background: rgba(239, 68, 68, 0.95);
   }
   
   .pill-nav-custom .mobile-menu-button {
-    background: rgba(139, 92, 246, 0.95);
+    background: rgba(239, 68, 68, 0.95);
   }
 }
 
 .pill-nav-custom .mobile-menu-popover {
-  background: rgba(30, 27, 75, 0.95);
+  background: rgba(31, 41, 55, 0.95);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.3);
 }
 
 .pill-nav-custom .pill:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
   transition: all 0.3s ease;
 }
 
 .pill-nav-custom .pill.is-active {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
+
+/* Performance Optimizations */
+.performance-optimized {
+  contain: layout style paint;
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force hardware acceleration */
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Animation Performance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimized animations with hardware acceleration */
+.animate-bounce {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-pulse {
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 /* SplitText Animation Styles */
 .split-text-description {
   perspective: 1000px;
+  contain: layout;
 }
 
 .split-text-description .split-element {
@@ -198,16 +233,58 @@
   will-change: transform, opacity;
   backface-visibility: hidden;
   transform-style: preserve-3d;
+  contain: layout style;
+}
+
+/* Optimized component styles */
+.spotlight-card {
+  contain: layout style;
+  will-change: box-shadow, transform;
+  transform: translateZ(0);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.gradient-text {
+  contain: layout;
+  will-change: background-position;
+  transform: translateZ(0);
+}
+
+.mobile-menu {
+  contain: layout style;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Navigation optimizations */
+.pill-nav-custom {
+  contain: layout style;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+}
+
+/* Button hover optimizations */
+button {
+  will-change: background-color, box-shadow, transform;
+  transform: translateZ(0);
+}
+
+/* Hyperspeed canvas optimization */
+canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  image-rendering: optimizeSpeed;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .split-text-description .split-element:hover {
-  color: #c4b5fd;
+  color: #fca5a5;
   transition: color 0.3s ease;
 }
 
 /* Add subtle glow effect for split text */
 .split-parent {
-  text-shadow: 0 0 30px rgba(196, 181, 253, 0.1);
+  text-shadow: 0 0 30px rgba(252, 165, 165, 0.1);
 }
 
 /* Fix pill navigation buttons */
