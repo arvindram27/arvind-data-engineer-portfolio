@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import OptimizedImage from './OptimizedImage';
 import './ProfileCard.css';
 
 const DEFAULT_BEHIND_GRADIENT =
@@ -255,28 +256,30 @@ const ProfileCardComponent = ({
           <div className="pc-shine" />
           <div className="pc-glare" />
           <div className="pc-content pc-avatar-content">
-            <img
+            <OptimizedImage
               className="avatar"
               src={avatarUrl}
               alt={`${name || 'User'} avatar`}
-              loading="lazy"
-              onError={e => {
-                const target = e.target;
-                target.style.display = 'none';
+              width={300}
+              height={300}
+              priority={true}
+              placeholder="blur"
+              onError={() => {
+                console.warn('Failed to load avatar image:', avatarUrl);
               }}
             />
             {showUserInfo && (
               <div className="pc-user-info">
                 <div className="pc-user-details">
                   <div className="pc-mini-avatar">
-                    <img
+                    <OptimizedImage
                       src={miniAvatarUrl || avatarUrl}
                       alt={`${name || 'User'} mini avatar`}
-                      loading="lazy"
-                      onError={e => {
-                        const target = e.target;
-                        target.style.opacity = '0.5';
-                        target.src = avatarUrl;
+                      width={48}
+                      height={48}
+                      placeholder="blur"
+                      onError={() => {
+                        console.warn('Failed to load mini avatar image:', miniAvatarUrl || avatarUrl);
                       }}
                     />
                   </div>

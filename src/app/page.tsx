@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,30 +11,16 @@ import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database
 import { createIntersectionObserver, throttle, preloadCriticalResources, measurePerformance } from "@/lib/performance";
 import { registerServiceWorker, measureWebVitals, monitorResourceLoading } from "@/lib/sw";
 
-// Lazy load heavy components
+// Import critical above-the-fold components synchronously for instant loading
+import PillNav from "@/components/PillNav";
+import TextType from "@/components/TextType";
+import SplitText from "@/components/SplitText";
+import GradientText from "@/components/GradientText";
+
+// Keep heavy components dynamic (below fold or performance-intensive)
 const Hyperspeed = dynamic(() => import("@/components/Hyperspeed"), {
   ssr: false,
   loading: () => <div className="absolute inset-0 bg-gray-900" />
-});
-
-const PillNav = dynamic(() => import("@/components/PillNav"), {
-  ssr: false,
-  loading: () => null
-});
-
-const TextType = dynamic(() => import("@/components/TextType"), {
-  ssr: false,
-  loading: () => <span>Data Engineer</span>
-});
-
-const SplitText = dynamic(() => import("@/components/SplitText"), {
-  ssr: false,
-  loading: () => <span>Building the future of data infrastructure</span>
-});
-
-const GradientText = dynamic(() => import("@/components/GradientText"), {
-  ssr: false,
-  loading: () => <span>Loading...</span>
 });
 
 const SpotlightCard = dynamic(() => import("@/components/SpotlightCard"), {
@@ -44,6 +30,7 @@ const SpotlightCard = dynamic(() => import("@/components/SpotlightCard"), {
   </Card>
 });
 
+// ProfileCard can be dynamic since it's in about section (below fold)
 const ProfileCard = dynamic(() => import("@/components/ProfileCard"), {
   ssr: false,
   loading: () => <div className="animate-pulse bg-gray-700 rounded-lg h-96 max-w-xs" />
@@ -434,23 +421,21 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-12 items-start">
             {/* Profile Card */}
             <div className="flex justify-center">
-              <Suspense fallback={<div className="animate-pulse bg-gray-700 rounded-lg h-96 max-w-xs w-full" />}>
-                <ProfileCard
-                  avatarUrl="/images/profile.jpg"
-                  miniAvatarUrl="/images/profile.jpg"
-                  handle="arvind-ramachandran"
-                  status="Available for Opportunities"
-                  contactText="Contact Me"
-                  showUserInfo={true}
-                  enableTilt={true}
-                  behindGradient={undefined}
-                  innerGradient={undefined}
-                  onContactClick={() => {
-                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="max-w-xs"
-                />
-              </Suspense>
+              <ProfileCard
+                avatarUrl="/images/profile.jpg"
+                miniAvatarUrl="/images/profile.jpg"
+                handle="arvind-ramachandran"
+                status="Available for Opportunities"
+                contactText="Contact Me"
+                showUserInfo={true}
+                enableTilt={true}
+                behindGradient={undefined}
+                innerGradient={undefined}
+                onContactClick={() => {
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="max-w-xs"
+              />
             </div>
             
             <div className="md:col-span-2">

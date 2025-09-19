@@ -79,19 +79,23 @@ export function createIntersectionObserver(
 export function preloadCriticalResources() {
   if (typeof window === 'undefined') return;
   
-  // Preload critical fonts
-  const fontUrl = '/fonts/inter.woff2'; // Update with actual font path
-  const linkFont = document.createElement('link');
-  linkFont.rel = 'preload';
-  linkFont.href = fontUrl;
-  linkFont.as = 'font';
-  linkFont.type = 'font/woff2';
-  linkFont.crossOrigin = 'anonymous';
+  // Preload critical images
+  const criticalImages = [
+    '/images/profile.jpg',
+    '/logo.svg'
+  ];
   
-  // Only add if not already preloaded
-  if (!document.querySelector(`link[href="${fontUrl}"]`)) {
-    document.head.appendChild(linkFont);
-  }
+  criticalImages.forEach(imageUrl => {
+    const linkImage = document.createElement('link');
+    linkImage.rel = 'preload';
+    linkImage.href = imageUrl;
+    linkImage.as = 'image';
+    
+    // Only add if not already preloaded
+    if (!document.querySelector(`link[href="${imageUrl}"]`)) {
+      document.head.appendChild(linkImage);
+    }
+  });
 }
 
 // Image loading optimization
