@@ -77,6 +77,7 @@ const skillsData = {
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeHref, setActiveHref] = useState('#home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -102,6 +103,12 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Mobile navigation functions
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setMobileMenuOpen(false);
+  };
+
   // Navigation items for PillNav
   const navItems = [
     { href: '#home', label: 'Home' },
@@ -112,20 +119,22 @@ export default function Home() {
     { href: '#contact', label: 'Contact' }
   ];
 
+  // Mobile-optimized Hyperspeed configuration
+  const isPortrait = typeof window !== 'undefined' ? window.innerHeight > window.innerWidth : false;
   const hyperspeedOptions = {
     onSpeedUp: () => {},
     onSlowDown: () => {},
     distortion: 'turbulentDistortion',
-    length: 400,
-    roadWidth: 9,
-    islandWidth: 2,
+    length: isPortrait ? 600 : 400, // Longer for portrait
+    roadWidth: isPortrait ? 12 : 9, // Wider for mobile
+    islandWidth: isPortrait ? 3 : 2,
     lanesPerRoad: 3,
-    fov: 90,
-    fovSpeedUp: 150,
+    fov: isPortrait ? 110 : 90, // Wider FOV for portrait
+    fovSpeedUp: isPortrait ? 130 : 150,
     speedUp: 2,
     carLightsFade: 0.4,
-    totalSideLightSticks: 50,
-    lightPairsPerRoadWay: 50,
+    totalSideLightSticks: isPortrait ? 70 : 50, // More lights for portrait
+    lightPairsPerRoadWay: isPortrait ? 70 : 50,
     shoulderLinesWidthPercentage: 0.05,
     brokenLinesWidthPercentage: 0.1,
     brokenLinesLengthPercentage: 0.5,
@@ -133,7 +142,7 @@ export default function Home() {
     lightStickHeight: [1.3, 1.7],
     movingAwaySpeed: [60, 80],
     movingCloserSpeed: [-120, -160],
-    carLightsLength: [400 * 0.05, 400 * 0.15],
+    carLightsLength: isPortrait ? [600 * 0.05, 600 * 0.15] : [400 * 0.05, 400 * 0.15],
     carLightsRadius: [0.05, 0.14],
     carWidthPercentage: [0.3, 0.5],
     carShiftX: [-0.2, 0.2],
@@ -152,8 +161,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Navigation */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex justify-center">
+      {/* Navigation - Hidden on mobile */}
+      <div className="fixed top-0 left-0 right-0 z-50 justify-center hidden md:flex">
         <div className="pill-nav-container">
           <PillNav
             logo="/logo.svg"
@@ -171,29 +180,80 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Mobile Floating Menu */}
+      <div className="md:hidden fixed bottom-6 right-6 z-50">
+        <div className="relative">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <svg 
+              className={`w-6 h-6 transition-transform duration-300 ${
+                mobileMenuOpen ? 'rotate-45' : 'rotate-0'
+              }`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} 
+              />
+            </svg>
+          </button>
+          
+          {mobileMenuOpen && (
+            <div className="absolute bottom-16 right-0 bg-gray-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 min-w-48 border border-purple-500/30">
+              {[
+                { id: 'home', label: 'Home' },
+                { id: 'about', label: 'About' },
+                { id: 'skills', label: 'Skills' },
+                { id: 'projects', label: 'Projects' },
+                { id: 'experience', label: 'Experience' },
+                { id: 'contact', label: 'Contact' }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    activeHref === `#${item.id}` 
+                      ? 'bg-purple-600 text-white' 
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Hero Section with Hyperspeed Background */}
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20 sm:opacity-30">
+        <div className="absolute inset-0 z-0 opacity-30 md:opacity-30">
           <Hyperspeed effectOptions={hyperspeedOptions} />
         </div>
         
-        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-16 md:pt-0 transform transition-all duration-1000 ${
+        <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-0 transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
           <div className="mb-6">
             <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-6 sm:mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
               <Database className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-3 sm:mb-4">
+            <h1 className="text-2xl sm:text-4xl md:text-7xl font-bold mb-2 sm:mb-4">
               <GradientText 
                 colors={['#00d4ff', '#0ea5e9', '#06b6d4', '#0891b2', '#00d4ff']}
                 animationSpeed={6}
-                className="text-3xl sm:text-5xl md:text-7xl font-bold"
+                className="text-2xl sm:text-4xl md:text-7xl font-bold leading-tight"
               >
                 Arvind Ramachandran R
               </GradientText>
             </h1>
-            <div className="text-lg sm:text-2xl md:text-3xl text-gray-300 mb-4 sm:mb-6">
+            <div className="text-base sm:text-xl md:text-3xl text-gray-300 mb-3 sm:mb-6">
               <TextType
                 text={[
                   "Entry-Level Data Engineer",
@@ -211,7 +271,7 @@ export default function Home() {
                 cursorBlinkDuration={0.8}
               />
             </div>
-            <div className="text-base sm:text-lg text-gray-400 mb-6 sm:mb-8 max-w-xl sm:max-w-2xl mx-auto px-2 sm:px-0">
+            <div className="text-sm sm:text-base md:text-lg text-gray-400 mb-4 sm:mb-8 max-w-sm sm:max-w-2xl mx-auto px-2 sm:px-0">
               <SplitText
                 text="Passionate about transforming raw data into actionable insights through efficient data pipelines, analytics solutions, and modern data engineering practices."
                 tag="p"
@@ -227,36 +287,50 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-6 sm:mb-8 px-4 sm:px-0">
-            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
-              <a href="#projects" className="flex items-center justify-center gap-2 w-full">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center mb-4 sm:mb-8 px-6 sm:px-0">
+            <Button 
+              size="sm" 
+              className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              <span className="flex items-center justify-center gap-2">
                 View My Work
-                <ExternalLink className="w-4 h-4" />
-              </a>
+                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+              </span>
             </Button>
-            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
-              <a href="#contact" className="flex items-center justify-center gap-2 w-full">
+            <Button 
+              size="sm" 
+              className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              <span className="flex items-center justify-center gap-2">
                 Get In Touch
-                <Mail className="w-4 h-4" />
-              </a>
+                <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+              </span>
             </Button>
-            <Button size="default" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto">
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 sm:size-lg w-full sm:w-auto text-sm sm:text-base">
               <a href="/resume.pdf" target="_blank" className="flex items-center justify-center gap-2 w-full">
                 Download Resume
-                <Download className="w-4 h-4" />
+                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </Button>
           </div>
           
-          <div className="flex justify-center space-x-4 sm:space-x-6">
+          <div className="flex justify-center space-x-3 sm:space-x-6">
             <a href="https://linkedin.com/in/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Linkedin className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
             <a href="https://github.com/arvind-ramachandran" target="_blank" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Github className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Github className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
             <a href="mailto:arvind.ramachandran@email.com" className="text-gray-400 hover:text-blue-400 transition-colors">
-              <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Mail className="w-4 h-4 sm:w-6 sm:h-6" />
             </a>
           </div>
         </div>
@@ -270,11 +344,11 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 bg-gray-800">
+      <section id="about" className="py-12 sm:py-20 bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">About Me</h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+          <div className="text-center mb-8 sm:mb-16">
+            <h2 className="text-2xl sm:text-4xl font-bold text-white mb-3 sm:mb-4">About Me</h2>
+            <p className="text-base sm:text-xl text-gray-400 max-w-3xl mx-auto">
               As an entry-level data engineer, I&apos;m passionate about building robust data solutions that drive business value.
             </p>
           </div>
