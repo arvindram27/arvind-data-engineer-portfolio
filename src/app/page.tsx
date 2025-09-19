@@ -11,16 +11,11 @@ import { Github, Linkedin, Mail, Phone, MapPin, ExternalLink, Download, Database
 import { createIntersectionObserver, throttle, preloadCriticalResources, measurePerformance } from "@/lib/performance";
 import { registerServiceWorker, measureWebVitals, monitorResourceLoading } from "@/lib/sw";
 
-// Import critical text components synchronously for instant loading
+// Import critical components synchronously for instant loading
 import TextType from "@/components/TextType";
 import SplitText from "@/components/SplitText";
 import GradientText from "@/components/GradientText";
-import SimpleNav from "@/components/SimpleNav";
-
-// PillNav loads progressively after initial render
-const PillNav = dynamic(() => import("@/components/PillNav"), {
-  ssr: false
-});
+import NavBar from "@/components/NavBar";
 
 // Keep heavy components dynamic (below fold or performance-intensive)
 const Hyperspeed = dynamic(() => import("@/components/Hyperspeed"), {
@@ -103,8 +98,6 @@ const skillsData = {
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [activeHref, setActiveHref] = useState('#home');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [pillNavReady, setPillNavReady] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -119,15 +112,6 @@ export default function Home() {
     // Start web vitals monitoring
     measureWebVitals();
     monitorResourceLoading();
-    
-    // Delay PillNav loading to ensure smooth initial render
-    const pillNavTimer = setTimeout(() => {
-      setPillNavReady(true);
-    }, 1000); // Load PillNav after 1 second
-    
-    return () => {
-      clearTimeout(pillNavTimer);
-    };
     
     // Optimized scroll handler
     const handleScroll = () => {
@@ -176,7 +160,6 @@ export default function Home() {
       
       return () => {
         if (observer) observer.disconnect();
-        clearTimeout(pillNavTimer);
       };
     } else {
       // Fallback to throttled scroll listener
@@ -184,16 +167,10 @@ export default function Home() {
       window.addEventListener('scroll', throttledScroll, { passive: true });
       return () => {
         window.removeEventListener('scroll', throttledScroll);
-        clearTimeout(pillNavTimer);
       };
     }
   }, []);
 
-  // Mobile navigation functions
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setMobileMenuOpen(false);
-  };
 
   // Navigation items for PillNav
   const navItems = [
@@ -247,84 +224,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Hybrid Navigation - SimpleNav first, then PillNav */}
-      {!pillNavReady ? (
-        <SimpleNav
-          logo="/logo.svg"
-          logoAlt="Arvind Ramachandran R"
-          items={navItems}
-          activeHref={activeHref}
-        />
-      ) : (
-        <div className="fixed top-0 left-0 right-0 z-50 justify-center hidden md:flex">
-          <div className="pill-nav-container">
-            <PillNav
-              logo="/logo.svg"
-              logoAlt="Arvind Ramachandran R"
-              items={navItems}
-              activeHref={activeHref}
-              baseColor="#ef4444"
-              pillColor="#1f2937"
-              hoveredPillTextColor="#ffffff"
-              pillTextColor="#fca5a5"
-              className="pill-nav-custom"
-              ease="power2.easeOut"
-              initialLoadAnimation={true}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Floating Menu */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
-        <div className="relative">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="w-14 h-14 bg-gradient-to-r from-red-600 to-orange-600 rounded-full shadow-lg flex items-center justify-center text-white hover:shadow-xl transition-all duration-300 hover:scale-105"
-          >
-            <svg 
-              className={`w-6 h-6 transition-transform duration-300 ${
-                mobileMenuOpen ? 'rotate-45' : 'rotate-0'
-              }`} 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d={mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} 
-              />
-            </svg>
-          </button>
-          
-          {mobileMenuOpen && (
-            <div className="absolute bottom-16 right-0 bg-gray-800/95 backdrop-blur-lg rounded-lg shadow-xl p-3 min-w-48 border border-red-500/30">
-              {[
-                { id: 'home', label: 'Home' },
-                { id: 'about', label: 'About' },
-                { id: 'skills', label: 'Skills' },
-                { id: 'projects', label: 'Projects' },
-                { id: 'experience', label: 'Experience' },
-                { id: 'contact', label: 'Contact' }
-              ].map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    activeHref === `#${item.id}` 
-                      ? 'bg-red-600 text-white' 
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      {/* New Unified Navigation */}
+      <NavBar
+        logo="/logo.svg"
+        logoAlt="Arvind Ramachandran R"
+        items={navItems}
+        activeSection={activeHref}
+      />
 
       {/* Hero Section with Hyperspeed Background */}
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
